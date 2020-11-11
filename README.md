@@ -1,1 +1,1 @@
-DIGITAL COUNTDOWN TIMER
+Digital Countdown Timer
