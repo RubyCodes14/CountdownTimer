@@ -1,3 +1,11 @@
+'''
+ATTENTION USER
+When you run this code, on the timer control display, there's a label Current Year | Timer:
+default: here you enter the current year, default year is 2021
+auto: here you can it is recommmended you leave it as it is - it uses the epoch timing for the countdown; and if need be, 
+you enter the total time in minutes to round up the current year.
+'''
+
 try:
     import tkinter as tk
     import tkinter.ttk as ttk
