@@ -5,7 +5,6 @@ default: here you enter the current year, default year is 2021
 auto: here you can it is recommmended you leave it as it is - it uses the epoch timing for the countdown; and if need be, 
 you enter the total time in minutes to round up the current year.
 '''
-
 try:
     import tkinter as tk
     import tkinter.ttk as ttk
@@ -54,8 +53,6 @@ window_1.configure(bg = "#000000")
 window_1.resizable(False, False)
 #window_1.lift()
 
-screenWidth = window_1.winfo_screenwidth()
-screenHeight = window_1.winfo_screenheight()
 
 # ********WINDOW 2 - COUNTDOWN DISPLAY & ACTIVITY DISPLAY ****************** #
 window_2 = tk.Toplevel(window_1)
@@ -63,6 +60,9 @@ window_2.title("Countdown Timer - RubyCodes(c)")
 window_2.iconbitmap("clock.ico")
 window_2.minsize(720, 640)
 window_2.configure(bg = bg_colour)
+
+screenWidth = window_2.winfo_screenwidth()
+screenHeight = window_2.winfo_screenheight()
 
 #window_2.geometry("600x480+0+0")    #FOR SINGLE SCREEN, NOT EXTENDING
 
@@ -520,8 +520,8 @@ lbl_activity = tk.Label(frm_count, text = "", bg = actLabel_bg, relief = tk.GROO
 lbl_activity.pack(fill = tk.X)
 
 #COUNTDOWN TIME DISPLAY MAIN WINDOW (WINDOW 2)
-fontsize = 350 #percentage(screenWidth, 25.62)
-lbl_time = tk.Label(frm_count, text = TimerValue(ctd_Time), bg = Timer_bgColour, fg = Timer_fgColour, font = (timerFont, fontsize, "bold"))
+fontsize = 320 #percentage(screenWidth, 25.62)
+lbl_time = tk.Label(frm_count, text = TimerValue(get_timer_value()), bg = Timer_bgColour, fg = Timer_fgColour, font = (timerFont, fontsize, "bold"))
 lbl_time.pack(fill = tk.BOTH, expand = True, pady = 0)
 
 #///////////////*** WINDOW 1 ***///////////////////#
@@ -617,7 +617,8 @@ frm_countdown.pack(side = tk.RIGHT, fill = tk.BOTH, expand = True)
 lbl_activityWin1 = tk.Label(frm_countdown, text = "WE'RE ROUNDING UP 2021 IN...", fg = "#000000", bg = Timer_bgColour, font = (font1, 15, "normal"))
 lbl_activityWin1.pack(ipady = 7)
 
-lbl_timeWin1 = tk.Label(frm_countdown, text = TimerValue(get_timer_value()), width = 10, height = 5, bg = Timer_bgColour, fg = Timer_fgColour, font = (timerFont, 80, "bold"))
+lbl_timeWin1 = tk.Label(frm_countdown, text = TimerValue(get_timer_value()), width = 10, height = 5,
+                        bg = Timer_bgColour, fg = Timer_fgColour, font = (timerFont, 80, "bold"))
 lbl_timeWin1.pack()#fill = tk.BOTH, expand = True)
 
 window_1.mainloop()
