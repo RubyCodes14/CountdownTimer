@@ -15,6 +15,9 @@ from tkinter import messagebox
 import time
 import winsound
 
+#import pyglet
+#pyglet.font.add_file('CandyCanePersonalUseRegular-WyaPv.ttf')
+
 #from pynput.keyboard import Key, Controller 
 
 #DIFFERENT FROM BUT MOST LIKELY THE SAME WITH - Timer_bgColour
@@ -27,8 +30,28 @@ def maximize_window():
         kb.press(Key.up)
         kb.release(Key.up)
 """
+def updateFont(text,):
+    num_of_chars = len(text)
+    default_fontsize = 350
+    fontsize = default_fontsize
+    const = 80
+    if num_of_chars > 4:
+        decrement_coeff = (num_of_chars - 4) // 2
+        decreaseBy = decrement_coeff * const
+        if decreaseBy <= (const/2):
+            pass
+        else:
+            fontsize = default_fontsize - decreaseBy
+    elif num_of_chars < 4:
+        fontsize = default_fontsize + (const/2)
+    else:
+        fontsize = default_fontsize
+        
+    return (timerFont, fontsize, "bold")
+    
 get_auto_timer_once = True
 get_manual_timer_once = True
+
 def get_timer_value():
     epochTime = time.time()
     realTime = time.gmtime(epochTime)
@@ -113,8 +136,8 @@ blinker_flag = 0  # NO NEED FOR CHANGING - DO NOT CHANGE
 continuous = 5    # THE ALARM SOUNDS THE NUMBER OF INTEGER GIVEN OR CONTINUOUSLY IF True, NO ALARM IF False
 timeup = False   # THIS DECIDES WETHER THE TIMER SHOULD RUN OR  NOT, TO BE ABLE TO STOP RECURSIVE LOOP THAT OCCURS OF CLICKING 'START' WHEN TIME'S UP
 
-newYearText = f"HAPPY\nNEW YEAR\n==\n{current_year + 1}"
-newYearLabel = f"Welcome to {current_year + 1}"
+newYearText = f"-----------------\nHAPPY\nNEW YEAR\n**************" #\n\::. {current_year + 1} .::/
+newYearLabel = f"We're rounding up {current_year} in..."
 timeupText = newYearText #"TIME'S UP"
 
 timer_reset = False
@@ -122,7 +145,10 @@ showColourWarning = True   #set_timer_colour() flag, to control showing Warning 
 #label = ""
 
 def get_current_year_and_timer():
-    global current_year, ctd_Time, newYearLabel
+    global current_year, ctd_Time, newYearLabel#, newYearText
+
+    newYearLabel = f"We're rounding up {current_year} in..."
+    #newYearText = f"\n**************\nHAPPY\nNEW YEAR\n**************\n" #\n\::. {current_year + 1} .::/
     
     _inputs = ent_Time.get().split("|")
     if _inputs[0].strip() == "default":
@@ -249,6 +275,7 @@ def set_timer_colour():
         Timer_fgColour = "#FF0000"
         Timer_bgColour = "#FFFFFF"
     #customizedColour(userinput)
+        
     try:
         lbl_time["fg"] = Timer_fgColour
         lbl_time["bg"] = Timer_bgColour
@@ -256,8 +283,8 @@ def set_timer_colour():
         lbl_timeWin1["fg"] = Timer_fgColour
         lbl_timeWin1["bg"] = Timer_bgColour
         
-        lbl_activity["bg"] = Timer_bgColour
-        lbl_activity["fg"] = Timer_fgColour
+        #lbl_activity["bg"] = Timer_bgColour
+        #lbl_activity["fg"] = Timer_fgColour
     except:
         lbl_time["fg"] = Timer_fgColour
         lbl_time["bg"] = Timer_bgColour
@@ -265,8 +292,8 @@ def set_timer_colour():
         lbl_timeWin1["fg"] = Timer_fgColour
         lbl_timeWin1["bg"] = Timer_bgColour
         
-        lbl_activity["bg"] = Timer_bgColour
-        lbl_activity["fg"] = Timer_fgColour
+        #lbl_activity["bg"] = Timer_bgColour
+        #lbl_activity["fg"] = Timer_fgColour
         if showColourWarning:
             messagebox.showinfo(message="Invalid colour string.\nDefault colour is set!")
         
@@ -292,8 +319,8 @@ def blinker(txt, blink = True):
             lbl_timeWin1["fg"] = Timer_bgColour
             lbl_timeWin1["bg"] = Timer_fgColour
 
-            lbl_activity["bg"] = Timer_fgColour
-            lbl_activity["fg"] = Timer_bgColour
+            #lbl_activity["bg"] = Timer_fgColour
+            #lbl_activity["fg"] = Timer_bgColour
             
             alarm(continuous) #ALERT SOUND MAX FREQUENCY-32767 DURATION-THIS ALSO WORKS IN PLACE OF 'delayTime'
             
@@ -305,7 +332,7 @@ def TimerValue(secs):
     try:
         minutes = str(secs // 60)
         seconds = str(secs % 60)            
-        return twoDigits(minutes) + ":" + twoDigits(seconds)
+        return f"{twoDigits(minutes)}:{twoDigits(seconds)}"
     except(TypeError):
         pass #  return twoDigits(str(10)) + ":" + twoDigits(str(0))
     
@@ -340,7 +367,7 @@ def showWidgets():
     btn_start.grid(row = 0, column = 1, rowspan = 2)
 
 def setCtdTime(event=None):
-    global timer_is_running, ctd_Time, delayTime, alarm_flag, label, get_auto_timer_once, get_manual_timer_once, timer_type, current_year, newYearLabel, newYearText#, prevCount
+    global timer_is_running, ctd_Time, delayTime, alarm_flag, label, get_auto_timer_once, get_manual_timer_once, timer_type, current_year #newYearLabel, newYearText#, prevCount
     timer_type = ent_Time.get()
     get_auto_timer_once, get_manual_timer_once = True, True
     delayTime = 1000
@@ -350,10 +377,9 @@ def setCtdTime(event=None):
     
     
     get_current_year_and_timer()
-    newYearText = f"HAPPY\nNEW YEAR\n_______________\n\::. {current_year + 1} .::/\n**************"
-    newYearLabel = f"Welcome to {current_year + 1}"
+    
     ent_activity.delete(0, tk.END)
-    ent_activity.insert(0, f"We're ending {current_year} in...")
+    ent_activity.insert(0, newYearLabel)
     lbl_activity["text"] = newYearLabel.upper()
     lbl_activityWin1["text"] = newYearLabel.upper()
 
@@ -380,10 +406,11 @@ def setCtdTime(event=None):
             lbl_activityWin1["text"] = ""
             lbl_activity["text"] == ""
             label_length_exceeded = not(False)
+    
     else:
         lbl_activity["text"] = label.upper() #USER INPUT ACTIVITY
         lbl_activityWin1["text"] = label.upper() #FOR WINDOW 1 - CONTROL WINDOW
-        
+      
     lbl_timeWin1["font"] = (timerFont, 80, "bold")
 
     
@@ -396,7 +423,7 @@ def setCtdTime(event=None):
         lbl_activity.pack(side = tk.TOP, fill = tk.X)
     lbl_time["text"] = TimerValue(ctd_Time)
     lbl_timeWin1["text"] = TimerValue(ctd_Time)  #FOR CONTROL WINDOW
-    lbl_time["font"] = (timerFont, 350, "bold")     #THE FONT SIZE IS IN PIXELS AND HOW BIG IT IS (IN SIZE) DEPENDS ON THE SIZE OF THE COMPUTER IT'S RUNNING ON
+    lbl_time["font"] = updateFont(TimerValue(ctd_Time))#(timerFont, 350, "bold")     #THE FONT SIZE IS IN PIXELS AND HOW BIG IT IS (IN SIZE) DEPENDS ON THE SIZE OF THE COMPUTER IT'S RUNNING ON
     #lbl_time["fg"] = Timer_fgColour
     lbl_time.pack(side = tk.BOTTOM, fill = tk.BOTH, expand = True, pady = 0)
     #EXTRA TIME LABEL
@@ -407,7 +434,7 @@ def setCtdTime(event=None):
 
 def start(event=None):    
     global delayTime, ctd_Time, loop, timer_is_running, timeupText, showColourWarning, get_auto_timer_once, get_manual_timer_once, timer_type, newYearLabel, current_year
-
+    
     if timer_type == "default | auto":
         if get_auto_timer_once:
             label = getLabel(ent_activity.get())
@@ -431,23 +458,26 @@ def start(event=None):
         #lbl_activity["bg"] = actLabel_bg
         lbl_activity.pack(side = tk.TOP, fill = tk.X)
         
-        
+    
     if ctd_Time < 0:
         delayTime = 500  #REDUCE THIS TO INCREASE THE SPEED OF BLINKING
                         #ORIGINAL DELAY TIME = 1000 --> LINE 78 & 291
+        newYearLabel = f"Welcome to {current_year + 1}"
         #KEY BINDINGS/UNBINDINGS
         btn_start["command"] = reset_notif #THIS IS NECESSARY FOR BOTH RESET WARNUNG AND AVOIDING RECURSIVE LOOP OF 'start' FUNCTION
         window_1.bind("<Return>", reset_notif)
-        lbl_activity["text"] = newYearLabel.upper()
-        lbl_activityWin1["text"] = newYearLabel.upper()
+        lbl_activity.pack_forget()
+        #lbl_activityWin1.pack_forget()
+        #lbl_activity["text"] = newYearLabel.upper()
+        lbl_activityWin1["text"] = ""
         ent_activity.delete(0, tk.END)
         ent_activity.insert(0, newYearLabel)
         
         blinkText = blinker(timeupText)
-        #FOR DISPLAY WINDOW
+        #FOR DISPLAY WINDOW 
         #fs_2 = percentage(screenWidth, 15.37, timeupText)
         lbl_time["text"] = blinkText                #MAIN COUNTDOWN DISPLAY WINDOW
-        lbl_time["font"] = (timerFont, 200, "bold")
+        lbl_time["font"] = ("CandyCanePersonalUseRegular-WyaPv", 130, "bold") #FONT, FONTSTYLE, FONTFACE, FONTS
         #FOR CONTROL WINDOW
         #fs_1 = percentage(screenWidth, 4.03, timeupText)
         lbl_timeWin1["text"] = blinkText                #FOR CONTROL WINDOW
@@ -491,7 +521,7 @@ def start(event=None):
         
         lbl_time["text"] = TimerValue(ctd_Time)  #MAIN COUNTDOWN DISPLAY WINDOW
         lbl_timeWin1["text"] = TimerValue(ctd_Time)  #FOR CONTROL WINDOW
-        lbl_time["font"] = (timerFont, 350, "bold")
+        lbl_time["font"] = updateFont(TimerValue(ctd_Time))
         lbl_new_year.grid_forget()
         ent_Time.grid_forget()
         ent_activity.grid_forget()
@@ -516,11 +546,13 @@ frm_count = tk.Frame(window_2, bg = Timer_bgColour)
 frm_count.pack(fill = tk.BOTH, expand = True)
         
 #COUNTDOWN TIME ACTIVITY LABEL   
-lbl_activity = tk.Label(frm_count, text = "", bg = actLabel_bg, relief = tk.GROOVE, borderwidth = 0, fg = Timer_fgColour, font = (font1, 45, "normal"))
+lbl_activity = tk.Label(frm_count, text = newYearLabel.upper(), bg = actLabel_bg, relief = tk.GROOVE, borderwidth = 0, fg = Timer_fgColour, font = (font1, 40, "normal"))
 lbl_activity.pack(fill = tk.X)
 
+#lbl_activity.pack_forget()
+
 #COUNTDOWN TIME DISPLAY MAIN WINDOW (WINDOW 2)
-fontsize = 320 #percentage(screenWidth, 25.62)
+fontsize = 250 #percentage(screenWidth, 25.62)
 lbl_time = tk.Label(frm_count, text = TimerValue(get_timer_value()), bg = Timer_bgColour, fg = Timer_fgColour, font = (timerFont, fontsize, "bold"))
 lbl_time.pack(fill = tk.BOTH, expand = True, pady = 0)
 
@@ -614,8 +646,10 @@ frm_countdown = tk.Frame(frm_win1CtrlWidgets, width = ctrl_win_width // 2, bg = 
 frm_countdown.pack(side = tk.RIGHT, fill = tk.BOTH, expand = True)
 
 #COUNTDOWN TIME DISPLAY (WINDOW 1)
-lbl_activityWin1 = tk.Label(frm_countdown, text = "WE'RE ROUNDING UP 2021 IN...", fg = "#000000", bg = Timer_bgColour, font = (font1, 15, "normal"))
+lbl_activityWin1 = tk.Label(frm_countdown, text = newYearLabel.upper(), fg = "#000000", bg = Timer_bgColour, font = (font1, 15, "normal"))
 lbl_activityWin1.pack(ipady = 7)
+
+#lbl_activityWin1.pack_forget()
 
 lbl_timeWin1 = tk.Label(frm_countdown, text = TimerValue(get_timer_value()), width = 10, height = 5,
                         bg = Timer_bgColour, fg = Timer_fgColour, font = (timerFont, 80, "bold"))
