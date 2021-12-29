@@ -5,6 +5,7 @@ default: here you enter the current year, default year is 2021
 auto: here you can it is recommmended you leave it as it is - it uses the epoch timing for the countdown; and if need be, 
 you enter the total time in minutes to round up the current year.
 '''
+
 try:
     import tkinter as tk
     import tkinter.ttk as ttk
@@ -14,11 +15,10 @@ except:
 from tkinter import messagebox
 import time
 import winsound
-
-#import pyglet
-#pyglet.font.add_file('CandyCanePersonalUseRegular-WyaPv.ttf')
-
-#from pynput.keyboard import Key, Controller 
+'''
+import pyglet, os
+pyglet.font.add_file("CandyCane.ttf")
+'''
 
 #DIFFERENT FROM BUT MOST LIKELY THE SAME WITH - Timer_bgColour
 bg_colour = "#FFFFFF" #BACKGROUND COLOUR FOR ALL FRAMES AND TIME LABEL
@@ -151,18 +151,26 @@ def get_current_year_and_timer():
     #newYearText = f"\n**************\nHAPPY\nNEW YEAR\n**************\n" #\n\::. {current_year + 1} .::/
     
     _inputs = ent_Time.get().split("|")
-    if _inputs[0].strip() == "default":
+    year_input = _inputs[0].strip()
+    timer_input = _inputs[-1].strip()
+    
+    if year_input.lower() == "default":
         current_year = current_year
     else:
-        current_year = int(_inputs[0])
+        if not(year_input == ""):
+            current_year = int(_inputs[0])
+        else:
+            messagebox.showinfo(message="Please enter current year.")
     
 
-    if _inputs[-1].strip() == "auto":
+    if timer_input.lower() == "auto":
         ctd_Time = get_timer_value()
 
     else:
-        ctd_Time = convertTo_Seconds(_inputs[-1]) #USER INPUT TIME
-        
+        if not(timer_input == ""):
+            ctd_Time = convertTo_Seconds(_inputs[-1]) #USER INPUT TIME
+        else:
+            messagebox.showinfo(message=f"Please enter minutes remaining to end the year {current_year} or auto to use automatic timing.")
         
     
 def percentage(value, percent, text):
@@ -477,7 +485,7 @@ def start(event=None):
         #FOR DISPLAY WINDOW 
         #fs_2 = percentage(screenWidth, 15.37, timeupText)
         lbl_time["text"] = blinkText                #MAIN COUNTDOWN DISPLAY WINDOW
-        lbl_time["font"] = ("CandyCanePersonalUseRegular-WyaPv", 130, "bold") #FONT, FONTSTYLE, FONTFACE, FONTS
+        lbl_time["font"] = ("CandyCane", 130, "bold") #FONT, FONTSTYLE, FONTFACE, FONTS
         #FOR CONTROL WINDOW
         #fs_1 = percentage(screenWidth, 4.03, timeupText)
         lbl_timeWin1["text"] = blinkText                #FOR CONTROL WINDOW
