@@ -53,6 +53,7 @@ get_auto_timer_once = True
 get_manual_timer_once = True
 
 def get_timer_value():
+    global ctd_Time
     epochTime = time.time()
     realTime = time.gmtime(epochTime)
 
@@ -63,7 +64,7 @@ def get_timer_value():
     curr_time_in_secs = _hr + _min + _sec
     
     _timer = ((24 * 60 * 60) - curr_time_in_secs)
-    
+    ctd_Time = _timer
     return _timer
 
 #WINDOW 1 - CONTROL WINDOW: TIME INPUT, ACTIVITY INPUT, SET/RESET BUTTON, START BUTTON
@@ -119,10 +120,10 @@ title_font = "Cambria" #helvetica"
 #********* COLOURS *************
 Timer_fgColour = "#FF0000"
 Timer_bgColour = "#FFFFFF"
+user_fg, user_bg = Timer_fgColour, Timer_bgColour
 actLabel_bg = Timer_bgColour#"#F0FFFF"  #ACTIVITY LABEL BACKGROUND COLOUR - SLIGTHLY DIFERENT FROM [Timer_bgColour] SAME COLOUR CAN BE USED
-title_bgColour = "#0B00FF"
+title_bgColour = "red"#"#0B00FF"
 title_fgColour = "#FFFFFF"
-
 
 ## TIME
 delayTime = 1000        # DO NOT CHANGE FOR NORMAL TIMER 1sec (1000 milliseconds, ) delay for the timer
@@ -442,7 +443,7 @@ def setCtdTime(event=None):
 
 def start(event=None):    
     global delayTime, ctd_Time, loop, timer_is_running, timeupText, showColourWarning, get_auto_timer_once, get_manual_timer_once, timer_type, newYearLabel, current_year
-    
+
     if timer_type == "default | auto":
         if get_auto_timer_once:
             label = getLabel(ent_activity.get())
@@ -561,7 +562,7 @@ lbl_activity.pack(fill = tk.X)
 
 #COUNTDOWN TIME DISPLAY MAIN WINDOW (WINDOW 2)
 fontsize = 250 #percentage(screenWidth, 25.62)
-lbl_time = tk.Label(frm_count, text = TimerValue(get_timer_value()), bg = Timer_bgColour, fg = Timer_fgColour, font = (timerFont, fontsize, "bold"))
+lbl_time = tk.Label(frm_count, text = TimerValue(ctd_Time), bg = Timer_bgColour, fg = Timer_fgColour, font = (timerFont, fontsize, "bold"))
 lbl_time.pack(fill = tk.BOTH, expand = True, pady = 0)
 
 #///////////////*** WINDOW 1 ***///////////////////#
@@ -577,8 +578,7 @@ frm_win1CtrlWidgets.pack(fill = None)
 frm_title = tk.Frame(frm_win1CtrlWidgets, )#relief = tk.RAISED, borderwidth = 3, bg = "#CCEEFF")
 frm_title.pack()
 
-
-lbl_titleA = tk.Label(frm_title, text = "CONTROLS", height = 2, width = ctrl_win_width // 2, bg = title_bgColour, fg = title_fgColour, font=(title_font, 16, "bold"))
+lbl_titleA = tk.Label(frm_title, text = "CONTROLS", height = 2, width = (ctrl_win_width // 2)-9, bg = title_bgColour, fg = title_fgColour, font=(title_font, 16, "bold"))
 lbl_titleA.pack(side=tk.LEFT, fill = tk.X, expand = True)
 
 lbl_titleB = tk.Label(frm_title, text = "YEAR COUNTDOWN", height = 2, width = ctrl_win_width // 2, bg = title_bgColour, fg = title_fgColour, font=(title_font, 16, "bold"))
@@ -636,12 +636,12 @@ frm_process.pack(side = tk.BOTTOM, fill = tk.BOTH,)
 
 #SET/RESET BUTTON
 # "#FFFF0F" "#FFAD00"
-btn_setCtd = tk.Button(frm_process, text = "Set", bg = "#FFAD00", font = (btnFont, 30), command = setCtdTime)
-btn_setCtd.grid(row = 0, column = 0, sticky = "s")# rowspan = 2)
+btn_setCtd = tk.Button(frm_process, text = "Set", bg = "#FFAD00", font = (btnFont, 25), command = setCtdTime)
+btn_setCtd.grid(row = 0, column = 0, sticky = "s", padx=(0,4), ipadx=5)# rowspan = 2)
 
 #START BUTTON
-btn_start = tk.Button(frm_process, text = "Start", bg = "#FF0000", font = (btnFont, 30), command = start)
-btn_start.grid(row = 0, column = 1, sticky = "s")# rowspan = 2)
+btn_start = tk.Button(frm_process, text = "Start", bg = "#00FFFA", font = (btnFont, 25), command = start)
+btn_start.grid(row = 0, column = 1, sticky = "s", ipadx=7)# rowspan = 2)
 
 # BINDING THE ENTER KEY TO THE start FUNCTION/BUTTON
 window_1.bind("<Return>", start)
